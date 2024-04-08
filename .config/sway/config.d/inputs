@@ -1,0 +1,21 @@
+
+### Input configuration
+#
+# Example configuration:
+#
+#   input "2:14:SynPS/2_Synaptics_TouchPad" {
+#       dwt enabled
+#       tap enabled
+#       natural_scroll enabled
+#       middle_emulation enabled
+#   }
+#
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+
+input "1739:52856:MSFT0001:00_06CB:CE78_Touchpad" {
+	dwt enabled
+	tap enabled
+	middle_emulation enabled
+	tap_button_map lrm
+}
