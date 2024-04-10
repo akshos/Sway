@@ -15,7 +15,7 @@
 
 input "1739:52856:MSFT0001:00_06CB:CE78_Touchpad" {
 	dwt enabled
-	tap enabled
+	tap disabled
 	middle_emulation enabled
 	tap_button_map lrm
 }
