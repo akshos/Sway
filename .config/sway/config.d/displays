@@ -12,6 +12,11 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
 output eDP-1 {
 	mode 1920x1080@120Hz 
-	position 0 0
+	position 2560 0
 	adaptive_sync on
+}
+
+output HDMI-A-1 {
+	mode 2560x1440@60Hz
+	position 0 0
 }
