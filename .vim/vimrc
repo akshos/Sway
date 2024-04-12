@@ -35,10 +35,17 @@ nnoremap <silent> "+p :let @"=substitute(system("wl-paste --no-newline"), '<C-v>
 nnoremap <silent> "*p :let @"=substitute(system("wl-paste --no-newline --primary"), '<C-v><C-m>', '', 'g')<cr>p
 
 "
+" Execute pathogen package manager
+"
+execute pathogen#infect()
+
+"
 " Enable Syntax Highlighting
 "
 syntax on 
 filetype on 
+filetype indent on
+set autoindent
 
 "
 " Syntastic config
