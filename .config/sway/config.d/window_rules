@@ -1,0 +1,2 @@
+
+for_window [app_id="firefox"] inhibit_idle fullscreen
