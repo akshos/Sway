@@ -1,0 +1,53 @@
+
+set term=kitty
+
+"
+" Show line number
+"
+
+set number
+set relativenumber
+
+"
+" Set tab space to 4
+"
+
+set tabstop=4
+set shiftwidth=4
+" exapand tab to spaces
+set expandtab 
+
+"
+" Use wl-clipboard to integrate with system clipboard
+"
+
+" Note: @ is used to reference a register and @" denotes the unnamed register
+
+" In visual mode when "+y key combinations are pressed, invoke wl-copy and pass the contents of @"
+xnoremap <silent> "+y y:call system("wl-copy --trim-newline", @")<cr>
+
+" In normal mode when "+p key combinations are pressed, invoke wl-paste to get the clipboard contents without trailing new line 
+" and then replace any linefeed "\r" characters and paste the contents
+nnoremap <silent> "+p :let @"=substitute(system("wl-paste --no-newline"), '<C-v><C-m>', '', 'g')<cr>p
+
+" In normal mode when "*p key combinations are pressed, invoke wl-paste to get text that is selected elsewhere without trailing 
+" new line, replace linefeed character and paste the contents 
+nnoremap <silent> "*p :let @"=substitute(system("wl-paste --no-newline --primary"), '<C-v><C-m>', '', 'g')<cr>p
+
+"
+" Enable Syntax Highlighting
+"
+syntax on 
+filetype on 
+
+"
+" Syntastic config
+"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
