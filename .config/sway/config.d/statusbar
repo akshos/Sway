@@ -15,7 +15,9 @@ bar {
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
 
-    font "SauceCodePro Nerd Font Propo" Regular 10
+    status_padding 0
+
+    font "Hack Nerd Font" Regular 10
     pango_markup enabled
 }
 

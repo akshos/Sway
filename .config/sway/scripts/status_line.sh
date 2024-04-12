@@ -3,7 +3,7 @@ SLEEP_DURATION=4
 PING_SLEEP=8
 
 ping_sleep_time=0
-internet_status=" - 󰂭"
+internet_status="󰂭"
 
 battery_name=$(upower --enumerate | grep 'BAT')
 
@@ -67,23 +67,36 @@ print_status_line() {
 
     if [ "$ethernet_link" = "UP" ] ; then
         ethernet_status="󰈀"
+	ethernet_link_speed=`cat /sys/class/net/enp2s0/speed`
     else 
         ethernet_status="󰈂"
+	ethernet_link_speed=""
+    fi
+
+    ethernet_status="<span size='large'>$ethernet_status</span>"
+
+    if [ "$ethernet_link_speed" = "1000" ]; then
+	ethernet_status="$ethernet_status 1G"
+    elif [ "$ethernet_link_speed" = "100" ]; then
+	ethernet_status="$ethernet_status 100M"
     fi
 
     if [ "$wifi_link" = "UP" ] ; then
         wifi_status="󰖩"
+	wifi_name=" $(iwctl station wlan0 show | grep "Connected network" | awk '{print $3}')"
     else
         wifi_status="󰖪"
     fi
+
+    wifi_status="<span size='large'>$wifi_status</span>${wifi_name}"
 
     if [ $ping_sleep_time -ge $PING_SLEEP ] ; then
         ping_time=$(ping -c 1 google.com | grep -oP 'time=\d++' | awk -F= '{print $2}')
 
         if [ -z "$ping_time" ] ; then
-            internet_status=" - 󰂭"
+            internet_status="󰂭"
         else
-            internet_status=" - ${ping_time}ms"
+            internet_status="<span size='large'></span> ${ping_time}ms"
         fi
 
         ping_sleep_time=0
@@ -92,6 +105,7 @@ print_status_line() {
     fi
 
     screen_brightness=$(brightnessctl get)
+    brightness_percent=$(echo 'scale=2;' "(`brightnessctl get`" '/ 255.0) * 100' | bc | sed 's/\..*//')
     
     if [ $screen_brightness -ge 254 ] ; then
         brightness_status="󰛨"
@@ -115,20 +129,24 @@ print_status_line() {
         brightness_status="󱩎"
     fi
 
+    brightness_status="<span size='large'>$brightness_status</span> ${brightness_percent}%"
+
     default_sink_volume=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2}')
     default_sink_mute=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $3}')
     default_source_mute=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | awk '{print $3}')
     default_sink_volume=$(echo "scale=0; ${default_sink_volume}*100" | bc | sed 's/\.00//') 
 
     if [ "$default_sink_mute" = "[MUTED]" ] ; then
-        volume_status=" $default_sink_volume"
+        volume_status=""
     elif [ $default_sink_volume -ge 60 ] ; then
-        volume_status=" $default_sink_volume" 
+        volume_status="" 
     elif [ $default_sink_volume -ge 30 ] ; then
-        volume_status=" $default_sink_volume" 
+        volume_status="" 
     else
-        volume_status=" $default_sink_volume" 
+        volume_status="" 
     fi
+
+    volume_status="<span size='large'>$volume_status</span> ${default_sink_volume}%"
 
     if [ "$default_source_mute" = "[MUTED]" ] ; then
         mic_status="󰍭"
@@ -136,11 +154,13 @@ print_status_line() {
         mic_status="󰍬"
     fi
 
-    load_status=" $(cat /proc/loadavg | awk '{print $1}')"
+    mic_status="<span size='large'>$mic_status</span>"
 
-    memory_status=" $(free -h | grep Mem | awk '{print $7}')"
+    load_status="<span size='large'> </span> $(cat /proc/loadavg | awk '{print $1}')"
+
+    memory_status="<span size='large'></span> $(free -h | grep Mem | awk '{print $7}')"
         
-    echo "${memory_status} | ${load_status} | ${mic_status} | ${volume_status} | ${wifi_status} | ${ethernet_status} | ${internet_status} | ${brightness_status} |   ${current_date} -  ${current_time} | 󱐋 ${power_usage}W <span $battery_foreground>${battery_icon} ${battery_charge}%</span> "
+    echo "${memory_status} | ${load_status} | ${mic_status} | ${volume_status} | ${wifi_status} - ${ethernet_status} - ${internet_status} | ${brightness_status} |  ${current_date} -  ${current_time} | 󱐋 ${power_usage}W <span $battery_foreground>${battery_icon} ${battery_charge}%</span> "
 
 }
 
