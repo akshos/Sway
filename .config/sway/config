@@ -26,5 +26,7 @@ set $menu wofi --show drun
 
 font pango:"Hack Nerd Font" 10
 
+xwayland enable
+
 include /etc/sway/config.d/*
 include $HOME/.config/sway/config.d/*
