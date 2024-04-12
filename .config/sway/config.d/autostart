@@ -1,2 +1,4 @@
 
 exec $HOME/.config/wob/scripts/start_volume_wob.sh
+exec udiskie
+exec mako
